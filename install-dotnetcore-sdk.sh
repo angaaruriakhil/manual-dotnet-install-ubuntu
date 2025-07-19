@@ -9,6 +9,8 @@ source $HELPER_SCRIPTS/etc-environment.sh
 source $HELPER_SCRIPTS/install.sh
 source $HELPER_SCRIPTS/os.sh
 
+# Note for context on why this script exists please see: https://github.com/actions/runner-images/issues/12613
+
 # Install dependencies - https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-decision#dependencies
 
 latest_dotnet_packages=$(get_toolset_value '.dotnet.aptPackages[]')
@@ -85,11 +87,13 @@ if is_ubuntu24; then
 else
     profile_dotnet_root="/usr/share/dotnet"
 fi
-cat <<EOF > /etc/profile.d/dotnet.sh
+cat <<'EOF' > /etc/profile.d/dotnet.sh
 export DOTNET_ROOT=${profile_dotnet_root}
-export PATH=\${DOTNET_ROOT}:$HOME/.dotnet/tools:\$PATH
+export PATH=${DOTNET_ROOT}:$HOME/.dotnet/tools:$PATH
 EOF
 chmod +x /etc/profile.d/dotnet.sh
+
+# Users should be able to run dotnet tool install --global nameoftool and it should work now
 
 # List SDKs to verify installation
 echo "Listing installed .NET SDKs:"
