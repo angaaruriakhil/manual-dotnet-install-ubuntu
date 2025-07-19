@@ -15,6 +15,9 @@ latest_dotnet_packages=$(get_toolset_value '.dotnet.aptPackages[]')
 dotnet_versions=$(get_toolset_value '.dotnet.versions[]')
 dotnet_tools=$(get_toolset_value '.dotnet.tools[].name')
 
+# Disable telemetry
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 apt-get update
 
 if is_ubuntu24; then
